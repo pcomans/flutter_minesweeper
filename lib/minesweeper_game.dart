@@ -64,38 +64,51 @@ class BoardTileView extends StatelessWidget {
   @override
   build(BuildContext context) {
     return new InkWell(
-      onTap: _flag,
-      onLongPress: _reveal,
-      child: new BoardTileViewView(tile),
+      onTap: _reveal,
+      onLongPress: _flag,
+      child: tile.isRevealed
+          ? new RevealedTileView(tile)
+          : new HiddenTileView(tile),
     );
   }
 
-  void _flag() {
-    tile.toggleFlagged();
-  }
-
-  void _reveal() {}
+  void _flag() => tile.toggleFlagged();
+  void _reveal() => tile.setRevealed();
 }
 
-class BoardTileViewView extends StatelessWidget {
+class HiddenTileView extends StatelessWidget {
   final GameTile tile;
 
-  BoardTileViewView(this.tile);
+  HiddenTileView(this.tile);
 
   @override
   build(BuildContext context) {
     return new Container(
       decoration: new BoxDecoration(
         border: new Border.all(color: Colors.white30),
-        color: tile.getMine ? Colors.red : Colors.grey,
+        color: Colors.grey[600],
       ),
       child: new Center(
-        child: new Stack(
-          children: <Widget>[
-            new Text(tile.flagged ? "🚩" : ""),
-            new Text(tile.getMine ? "💣" : tile.numAdjecentMines.toString())
-          ],
-        ),
+        child: new Text(tile.isFlagged ? "🚩" : ""),
+      ),
+    );
+  }
+}
+
+class RevealedTileView extends StatelessWidget {
+  final GameTile tile;
+
+  RevealedTileView(this.tile);
+
+  @override
+  build(BuildContext context) {
+    return new Container(
+      decoration: new BoxDecoration(
+        border: new Border.all(color: Colors.white30),
+        color: tile.hasMine ? Colors.red : Colors.grey,
+      ),
+      child: new Center(
+        child: new Text(tile.hasMine ? "💣" : tile.numAdjecentMines.toString()),
       ),
     );
   }

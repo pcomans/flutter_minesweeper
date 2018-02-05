@@ -16,12 +16,10 @@ class GameBoard {
 
     mineLocations.shuffle();
     mineLocations.take(numMines).forEach((mineIndex) {
-      _boardTiles[mineIndex].setMine(true);
+      _boardTiles[mineIndex].setHasMine(true);
     });
 
     _updateAdjecentMines();
-
-    print(_boardTiles);
   }
 
   List<GameTile> get boardTiles => _boardTiles;
@@ -48,8 +46,9 @@ class GameTile {
 
   bool _hasMine = false;
   bool _flagged = false;
+  bool _isRevealed = false;
 
-  void setMine(bool hm) {
+  void setHasMine(bool hm) {
     _hasMine = hm;
   }
 
@@ -57,6 +56,11 @@ class GameTile {
     _flagged = !_flagged;
   }
 
-  bool get flagged => _flagged;
-  bool get getMine => _hasMine;
+  void setRevealed() {
+    _isRevealed = true;
+  }
+
+  bool get isFlagged => _flagged;
+  bool get hasMine => _hasMine;
+  bool get isRevealed => _isRevealed;
 }
