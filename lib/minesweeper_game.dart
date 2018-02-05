@@ -93,7 +93,7 @@ class BoardTileViewView extends StatelessWidget {
         child: new Stack(
           children: <Widget>[
             new Text(tile.flagged ? "🚩" : ""),
-            new Text("${tile.numAdjecentMines}")
+            new Text(tile.getMine ? "💣" : tile.numAdjecentMines.toString())
           ],
         ),
       ),
