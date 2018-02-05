@@ -21,7 +21,7 @@ class _MinesweeperConfigPageState extends State<MinesweeperConfigPage> {
             new RaisedButton(
               child: new Text("Start Game"),
               onPressed: () {
-                Navigator.of(context).push(getMinesweeperGameRoute(8, 8, 16));
+                Navigator.of(context).push(getMinesweeperGameRoute(9, 9, 16));
               },
             ),
           ],

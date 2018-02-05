@@ -66,10 +66,7 @@ class BoardTileView extends StatelessWidget {
     return new InkWell(
       onTap: _flag,
       onLongPress: _reveal,
-      child: new BoardTileViewView(
-        tile.getMine,
-        tile.flagged,
-      ),
+      child: new BoardTileViewView(tile),
     );
   }
 
@@ -81,20 +78,24 @@ class BoardTileView extends StatelessWidget {
 }
 
 class BoardTileViewView extends StatelessWidget {
-  final bool hasMine;
-  final bool hasFlag;
+  final GameTile tile;
 
-  BoardTileViewView(this.hasMine, this.hasFlag);
+  BoardTileViewView(this.tile);
 
   @override
   build(BuildContext context) {
     return new Container(
       decoration: new BoxDecoration(
         border: new Border.all(color: Colors.white30),
-        color: hasMine ? Colors.red : Colors.grey,
+        color: tile.getMine ? Colors.red : Colors.grey,
       ),
       child: new Center(
-        child: new Text(hasFlag ? "🚩" : ""),
+        child: new Stack(
+          children: <Widget>[
+            new Text(tile.flagged ? "🚩" : ""),
+            new Text("${tile.numAdjecentMines}")
+          ],
+        ),
       ),
     );
   }
