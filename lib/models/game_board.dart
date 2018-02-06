@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import '../helpers.dart';
 import 'game_tile.dart';
 
@@ -17,11 +16,18 @@ class GameBoard {
 
     mineLocations.shuffle();
     mineLocations.take(numMines).forEach((mineIndex) {
-      _boardTiles[mineIndex].setHasMine(true);
+      _boardTiles[mineIndex].hasMine = true;
     });
 
     _updateAdjecentMines();
   }
+
+  GameBoard.withTiles(
+    this.numRows,
+    this.numColumns,
+    this.numMines,
+    this._boardTiles,
+  );
 
   List<GameTile> get boardTiles => _boardTiles;
 
