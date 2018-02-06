@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'helpers.dart';
+import '../helpers.dart';
+import 'game_tile.dart';
 
 class GameBoard {
   List<GameTile> _boardTiles;
@@ -26,7 +27,7 @@ class GameBoard {
 
   void _updateAdjecentMines() {
     _boardTiles.forEach((tile) {
-      if (!tile._hasMine) {
+      if (!tile.hasMine) {
         tile.numAdjecentMines = _getNumAdjecentMines(tile);
       }
     });
@@ -34,33 +35,6 @@ class GameBoard {
 
   int _getNumAdjecentMines(GameTile tile) {
     List<int> neighborIdxs = getNeighborIdxs(tile.index, numRows, numColumns);
-    return neighborIdxs.where((idx) => _boardTiles[idx]._hasMine).length;
+    return neighborIdxs.where((idx) => _boardTiles[idx].hasMine).length;
   }
-}
-
-class GameTile {
-  final int index;
-  int numAdjecentMines;
-
-  GameTile(this.index);
-
-  bool _hasMine = false;
-  bool _flagged = false;
-  bool _isRevealed = false;
-
-  void setHasMine(bool hm) {
-    _hasMine = hm;
-  }
-
-  void toggleFlagged() {
-    _flagged = !_flagged;
-  }
-
-  void setRevealed() {
-    _isRevealed = true;
-  }
-
-  bool get isFlagged => _flagged;
-  bool get hasMine => _hasMine;
-  bool get isRevealed => _isRevealed;
 }

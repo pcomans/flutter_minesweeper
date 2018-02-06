@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'game_board.dart';
+import 'models/game_board.dart';
+import 'models/game_tile.dart';
 
 MaterialPageRoute getMinesweeperGameRoute(
   int numRows,
