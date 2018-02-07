@@ -6,15 +6,17 @@ class GameBoard {
   final List<bool> mines;
   final List<bool> flagged;
   final List<bool> revealed;
+  final List<int> adjacentMines;
   final int numRows;
   final int numColumns;
 
   GameBoard({
-    @required this.mines,
-    @required this.flagged,
-    @required this.revealed,
-    this.numRows = 0,
-    this.numColumns = 0,
+    this.mines,
+    this.flagged,
+    this.revealed,
+    this.adjacentMines,
+    this.numRows,
+    this.numColumns,
   });
 }
 
