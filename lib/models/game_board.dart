@@ -1,13 +1,30 @@
 import '../helpers.dart';
 import 'game_tile.dart';
+import 'package:flutter/foundation.dart';
 
 class GameBoard {
+  final List<bool> mines;
+  final List<bool> flagged;
+  final List<bool> revealed;
+  final int numRows;
+  final int numColumns;
+
+  GameBoard({
+    @required this.mines,
+    @required this.flagged,
+    @required this.revealed,
+    this.numRows = 0,
+    this.numColumns = 0,
+  });
+}
+
+class GameBoard2 {
   List<GameTile> _boardTiles;
   final int numRows;
   final int numColumns;
   final int numMines;
 
-  GameBoard(this.numRows, this.numColumns, this.numMines) {
+  GameBoard2(this.numRows, this.numColumns, this.numMines) {
     _boardTiles = new List<GameTile>.generate(
         numRows * numColumns, (int index) => new GameTile(index));
 
