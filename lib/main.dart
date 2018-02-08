@@ -69,7 +69,7 @@ GameBoard _revealTile(GameBoard board, RevealTileAction action) {
 class MyApp extends StatelessWidget {
   final store = new Store<GameBoard>(
     gameBoardReducer,
-    initialState: new GameBoard(),
+    initialState: null,
   );
   // This widget is the root of your application.
   @override
