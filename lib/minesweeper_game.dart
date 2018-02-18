@@ -4,6 +4,18 @@ import 'models/game_board.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import "main.dart";
+
+typedef void OnRevealTileCallback(int idx);
+typedef void OnFlagTileCallback(int idx);
+
+class ViewModel {
+  final GameBoard board;
+  final OnRevealTileCallback onRevealTile;
+  final OnFlagTileCallback onFlagTile;
+
+  ViewModel({this.board, this.onRevealTile, this.onFlagTile});
+}
 
 MaterialPageRoute getMinesweeperGameRoute() {
   return new MaterialPageRoute(
@@ -16,9 +28,16 @@ MaterialPageRoute getMinesweeperGameRoute() {
 class MinesweeperGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new StoreBuilder<GameBoard>(
-      builder: (BuildContext context, Store<GameBoard> store) {
-        GameBoard board = store.state;
+    return new StoreConnector<GameBoard, ViewModel>(
+      converter: (Store<GameBoard> store) {
+        return new ViewModel(
+          board: store.state,
+          onRevealTile: (idx) => store.dispatch(new RevealTileAction(idx)),
+          onFlagTile: (idx) => store.dispatch(new FlagTileAction(idx)),
+        );
+      },
+      builder: (BuildContext context, ViewModel viewModel) {
+        GameBoard board = viewModel.board;
 
         List<int> indices =
             new List<int>.generate(board.mines.length, (int index) => index);
@@ -33,12 +52,16 @@ class MinesweeperGame extends StatelessWidget {
               bool hasMine = board.mines[index];
               bool isFlagged = board.flagged[index];
               //Leave the board revealed for now
-              bool isRevealed = true || board.revealed[index];
-              int numAdjecentMines = board.adjacentMines[index];
+              bool isRevealed = board.revealed[index];
+              int numAdjacentMines = board.adjacentMines[index];
 
               return isRevealed
-                  ? new RevealedTileView(hasMine, numAdjecentMines)
-                  : new HiddenTileView(isFlagged);
+                  ? new RevealedTileView(hasMine, numAdjacentMines)
+                  : new HiddenTileView(
+                      isFlagged,
+                      () => viewModel.onRevealTile(index),
+                      () => viewModel.onFlagTile(index),
+                    );
             }).toList(),
           ),
         );
@@ -49,18 +72,26 @@ class MinesweeperGame extends StatelessWidget {
 
 class HiddenTileView extends StatelessWidget {
   final bool isFlagged;
+  final VoidCallback onReveal;
+  final VoidCallback onFlag;
 
-  HiddenTileView(this.isFlagged);
+  HiddenTileView(this.isFlagged, this.onReveal, this.onFlag);
 
   @override
   build(BuildContext context) {
-    return new Container(
-      decoration: new BoxDecoration(
-        border: new Border.all(color: Colors.white30),
-        color: Colors.grey[600],
-      ),
-      child: new Center(
-        child: new Text(isFlagged ? "🚩" : ""),
+    return new Material(
+      color: Colors.grey[600],
+      child: new InkWell(
+        onTap: onReveal,
+        onLongPress: onFlag,
+        child: new Container(
+          decoration: new BoxDecoration(
+            border: new Border.all(color: Colors.white30),
+          ),
+          child: new Center(
+            child: new Text(isFlagged ? "🚩" : ""),
+          ),
+        ),
       ),
     );
   }
@@ -68,9 +99,9 @@ class HiddenTileView extends StatelessWidget {
 
 class RevealedTileView extends StatelessWidget {
   final bool hasMine;
-  final int numAdjecentMines;
+  final int numAdjacentMines;
 
-  RevealedTileView(this.hasMine, this.numAdjecentMines);
+  RevealedTileView(this.hasMine, this.numAdjacentMines);
 
   @override
   build(BuildContext context) {
@@ -80,7 +111,7 @@ class RevealedTileView extends StatelessWidget {
         color: hasMine ? Colors.red : Colors.grey,
       ),
       child: new Center(
-        child: new Text(hasMine ? "💣" : numAdjecentMines.toString()),
+        child: new Text(hasMine ? "💣" : numAdjacentMines.toString()),
       ),
     );
   }

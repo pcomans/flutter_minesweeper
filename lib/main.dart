@@ -12,6 +12,11 @@ class RevealTileAction {
 
   RevealTileAction(this.idx);
 }
+class FlagTileAction {
+  final int idx;
+
+  FlagTileAction(this.idx);
+}
 
 class InitializeBoardAction {
   final int numRows;
@@ -24,6 +29,7 @@ class InitializeBoardAction {
 final gameBoardReducer = combineTypedReducers<GameBoard>([
   new ReducerBinding<GameBoard, InitializeBoardAction>(_initializeBoard),
   new ReducerBinding<GameBoard, RevealTileAction>(_revealTile),
+  new ReducerBinding<GameBoard, FlagTileAction>(_flagTile),
 ]);
 
 GameBoard _initializeBoard(GameBoard board, InitializeBoardAction action) {
@@ -52,6 +58,23 @@ GameBoard _initializeBoard(GameBoard board, InitializeBoardAction action) {
   );
 }
 
+GameBoard _flagTile(GameBoard board, FlagTileAction action) {
+  int i = 0;
+  List<bool> newFlagged = board.flagged.map((tile) {
+    i++;
+    return tile || (action.idx == i - 1);
+  }).toList(growable: false);
+
+  return new GameBoard(
+    mines: board.mines,
+    flagged: newFlagged,
+    revealed: board.revealed,
+    numColumns: board.numColumns,
+    numRows: board.numRows,
+    adjacentMines: board.adjacentMines,
+  );
+}
+
 GameBoard _revealTile(GameBoard board, RevealTileAction action) {
   int i = 0;
   List<bool> newRevealed = board.revealed.map((tile) {
@@ -63,6 +86,9 @@ GameBoard _revealTile(GameBoard board, RevealTileAction action) {
     mines: board.mines,
     flagged: board.flagged,
     revealed: newRevealed,
+    numColumns: board.numColumns,
+    numRows: board.numRows,
+    adjacentMines: board.adjacentMines,
   );
 }
 
