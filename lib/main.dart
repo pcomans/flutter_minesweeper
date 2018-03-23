@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'minesweeper_config_page.dart';
 import 'models/game_board.dart';
-import 'package:redux/redux.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'helpers.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 void main() => runApp(new MyApp());
 
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return new StoreProvider(
+    return new StoreProvider<GameBoard>(
       store: store,
       child: new MaterialApp(
         title: 'Minesweeper',
