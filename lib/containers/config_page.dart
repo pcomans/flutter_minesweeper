@@ -3,20 +3,20 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:minesweeper/actions/actions.dart';
+import 'package:minesweeper/containers/game_page.dart';
+import 'package:minesweeper/models/game_board.dart';
 import 'package:redux/redux.dart';
-import 'models/game_board.dart';
-import "main.dart";
-import 'minesweeper_game.dart';
 
 typedef OnInitCallback = Function(int numRows, int numCols, int numMines);
 
-class MinesweeperConfigPage extends StatefulWidget {
+class ConfigPage extends StatefulWidget {
   @override
-  _MinesweeperConfigPageState createState() =>
-      new _MinesweeperConfigPageState();
+  _ConfigPageState createState() =>
+      new _ConfigPageState();
 }
 
-class _MinesweeperConfigPageState extends State<MinesweeperConfigPage> {
+class _ConfigPageState extends State<ConfigPage> {
   int _numRows;
   int _numCols;
   int _numMines;
@@ -97,7 +97,7 @@ class _MinesweeperConfigPageState extends State<MinesweeperConfigPage> {
                   child: new Text("Start Game"),
                   onPressed: () {
                     onInit(_numRows, _numCols, _numMines);
-                    Navigator.of(context).push(getMinesweeperGameRoute());
+                    Navigator.of(context).push(getGamePageRoute());
                   },
                 ),
               ],

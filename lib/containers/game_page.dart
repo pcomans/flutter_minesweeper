@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'models/game_board.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:minesweeper/actions/actions.dart';
+import 'package:minesweeper/models/game_board.dart';
+import 'package:minesweeper/presentation/tile_views.dart';
 import 'package:redux/redux.dart';
-import "main.dart";
 
 typedef void OnRevealTileCallback(int idx);
 typedef void OnFlagTileCallback(int idx);
@@ -17,15 +17,15 @@ class ViewModel {
   ViewModel({this.board, this.onRevealTile, this.onFlagTile});
 }
 
-MaterialPageRoute getMinesweeperGameRoute() {
+MaterialPageRoute getGamePageRoute() {
   return new MaterialPageRoute(
     builder: (context) {
-      return new MinesweeperGame();
+      return new GamePage();
     },
   );
 }
 
-class MinesweeperGame extends StatelessWidget {
+class GamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<GameBoard, ViewModel>(
@@ -66,53 +66,6 @@ class MinesweeperGame extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class HiddenTileView extends StatelessWidget {
-  final bool isFlagged;
-  final VoidCallback onReveal;
-  final VoidCallback onFlag;
-
-  HiddenTileView(this.isFlagged, this.onReveal, this.onFlag);
-
-  @override
-  build(BuildContext context) {
-    return new Material(
-      color: Colors.grey[600],
-      child: new InkWell(
-        onTap: onReveal,
-        onLongPress: onFlag,
-        child: new Container(
-          decoration: new BoxDecoration(
-            border: new Border.all(color: Colors.white30),
-          ),
-          child: new Center(
-            child: new Text(isFlagged ? "🚩" : ""),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class RevealedTileView extends StatelessWidget {
-  final bool hasMine;
-  final int numAdjacentMines;
-
-  RevealedTileView(this.hasMine, this.numAdjacentMines);
-
-  @override
-  build(BuildContext context) {
-    return new Container(
-      decoration: new BoxDecoration(
-        border: new Border.all(color: Colors.white30),
-        color: hasMine ? Colors.red : Colors.grey,
-      ),
-      child: new Center(
-        child: new Text(hasMine ? "💣" : numAdjacentMines.toString()),
-      ),
     );
   }
 }
