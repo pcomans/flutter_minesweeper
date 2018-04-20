@@ -3,10 +3,10 @@ import 'package:minesweeper/models/game_board.dart';
 import 'package:minesweeper/reducers/helpers.dart';
 import 'package:redux/redux.dart';
 
-final gameBoardReducer = combineTypedReducers<GameBoard>([
-  new ReducerBinding<GameBoard, InitializeBoardAction>(_initializeBoard),
-  new ReducerBinding<GameBoard, RevealTileAction>(_revealTile),
-  new ReducerBinding<GameBoard, FlagTileAction>(_flagTile),
+final gameBoardReducer = combineReducers<GameBoard>([
+  new TypedReducer<GameBoard, InitializeBoardAction>(_initializeBoard),
+  new TypedReducer<GameBoard, RevealTileAction>(_revealTile),
+  new TypedReducer<GameBoard, FlagTileAction>(_flagTile),
 ]);
 
 GameBoard _initializeBoard(GameBoard board, InitializeBoardAction action) {
