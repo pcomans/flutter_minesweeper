@@ -61,11 +61,20 @@ GameBoard _flagTile(GameBoard board, FlagTileAction action) {
 }
 
 GameBoard _revealTile(GameBoard board, RevealTileAction action) {
-  int i = 0;
-  List<bool> newRevealed = board.revealed.map((tile) {
-    i++;
-    return tile || (action.idx == i - 1);
-  }).toList(growable: false);
+  List<bool> newRevealed =
+      board.revealed.map((tile) => tile).toList(growable: false);
+
+  if (board.adjacentMines[action.idx] == 0 && !board.mines[action.idx]) {
+    floodFill(
+      newRevealed,
+      board.adjacentMines,
+      action.idx,
+      board.numRows,
+      board.numColumns,
+    );
+  } else {
+    newRevealed[action.idx] = true;
+  }
 
   return new GameBoard(
     mines: board.mines,
@@ -76,4 +85,23 @@ GameBoard _revealTile(GameBoard board, RevealTileAction action) {
     adjacentMines: board.adjacentMines,
     createdAt: board.createdAt,
   );
+}
+
+/// Reveals all tiles in revealed that have a zero value in adjacent.
+/// Modifies revealed in place.
+void floodFill(
+  List<bool> revealed,
+  List<int> adjacent,
+  int idx,
+  int numRows,
+  int numColumns,
+) {
+  revealed[idx] = true;
+  if (adjacent[idx] == 0) {
+    getNeighborIdxs(idx, numRows, numColumns).forEach((nIdx) {
+      if (!revealed[nIdx]) {
+        floodFill(revealed, adjacent, nIdx, numRows, numColumns);
+      }
+    });
+  }
 }
