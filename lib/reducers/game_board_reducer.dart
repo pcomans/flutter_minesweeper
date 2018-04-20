@@ -1,6 +1,7 @@
 import 'package:minesweeper/actions/actions.dart';
 import 'package:minesweeper/models/game_board.dart';
 import 'package:minesweeper/reducers/helpers.dart';
+import 'package:minesweeper/util.dart';
 import 'package:redux/redux.dart';
 
 final gameBoardReducer = combineReducers<GameBoard>([
@@ -40,11 +41,9 @@ GameBoard _initializeBoard(GameBoard board, InitializeBoardAction action) {
 }
 
 GameBoard _flagTile(GameBoard board, FlagTileAction action) {
-  int i = 0;
-  List<bool> newFlagged = board.flagged.map((tile) {
-    i++;
-    return tile || (action.idx == i - 1);
-  }).toList(growable: false);
+  List<bool> newFlagged = mapWithIndex(board.flagged, ((tile, i) {
+    return tile || (action.idx == i);
+  })).toList(growable: false);
 
   return new GameBoard(
     mines: board.mines,
@@ -58,11 +57,9 @@ GameBoard _flagTile(GameBoard board, FlagTileAction action) {
 }
 
 GameBoard _revealTile(GameBoard board, RevealTileAction action) {
-  int i = 0;
-  List<bool> newRevealed = board.revealed.map((tile) {
-    i++;
-    return tile || (action.idx == i - 1);
-  }).toList(growable: false);
+  List<bool> newRevealed = mapWithIndex(board.revealed, ((tile, i) {
+    return tile || (action.idx == i);
+  })).toList(growable: false);
 
   return new GameBoard(
     mines: board.mines,
