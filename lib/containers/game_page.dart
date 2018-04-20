@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:minesweeper/actions/actions.dart';
+import 'package:minesweeper/containers/status_bar.dart';
 import 'package:minesweeper/models/game_board.dart';
 import 'package:minesweeper/presentation/tile_views.dart';
 import 'package:redux/redux.dart';
@@ -46,23 +47,34 @@ class GamePage extends StatelessWidget {
           appBar: new AppBar(
             title: new Text("Minesweeper"),
           ),
-          body: new GridView.count(
-            crossAxisCount: board.numColumns,
-            children: indices.map((index) {
-              bool hasMine = board.mines[index];
-              bool isFlagged = board.flagged[index];
-              //Leave the board revealed for now
-              bool isRevealed = board.revealed[index];
-              int numAdjacentMines = board.adjacentMines[index];
+          body: Column(
+            children: <Widget>[
+              new StatusBar(
+                startTime: board.createdAt,
+                status: board.gameStatus,
+                flagsRemaining: board.flagsRemaining,
+              ),
+              new Expanded(
+                child: new GridView.count(
+                  crossAxisCount: board.numColumns,
+                  children: indices.map((index) {
+                    bool hasMine = board.mines[index];
+                    bool isFlagged = board.flagged[index];
+                    //Leave the board revealed for now
+                    bool isRevealed = board.revealed[index];
+                    int numAdjacentMines = board.adjacentMines[index];
 
-              return isRevealed
-                  ? new RevealedTileView(hasMine, numAdjacentMines)
-                  : new HiddenTileView(
-                      isFlagged,
-                      () => viewModel.onRevealTile(index),
-                      () => viewModel.onFlagTile(index),
-                    );
-            }).toList(),
+                    return isRevealed
+                        ? new RevealedTileView(hasMine, numAdjacentMines)
+                        : new HiddenTileView(
+                            isFlagged,
+                            () => viewModel.onRevealTile(index),
+                            () => viewModel.onFlagTile(index),
+                          );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
         );
       },

@@ -31,6 +31,7 @@ class _ConfigPageState extends State<ConfigPage> {
               numRows,
               numCols,
               numMines,
+              new DateTime.now(),
             ),
           );
         };

@@ -13,6 +13,7 @@ class InitializeBoardAction {
   final int numRows;
   final int numColumns;
   final int numMines;
+  final DateTime time;
 
-  InitializeBoardAction(this.numRows, this.numColumns, this.numMines);
+  InitializeBoardAction(this.numRows, this.numColumns, this.numMines, this.time);
 }

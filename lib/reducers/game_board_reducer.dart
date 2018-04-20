@@ -20,8 +20,11 @@ GameBoard _initializeBoard(GameBoard board, InitializeBoardAction action) {
   List<bool> revealed = new List<bool>.generate(numElems, (int index) => false);
 
   List<int> adjacentMines = new List<int>.generate(numElems, (int index) {
-    List<int> neighborIdxs =
-        getNeighborIdxs(index, action.numRows, action.numColumns);
+    List<int> neighborIdxs = getNeighborIdxs(
+      index,
+      action.numRows,
+      action.numColumns,
+    );
     return neighborIdxs.where((idx) => mines[idx]).length;
   });
 
@@ -32,6 +35,7 @@ GameBoard _initializeBoard(GameBoard board, InitializeBoardAction action) {
     adjacentMines: adjacentMines,
     numColumns: action.numColumns,
     numRows: action.numRows,
+    createdAt: action.time,
   );
 }
 
@@ -49,6 +53,7 @@ GameBoard _flagTile(GameBoard board, FlagTileAction action) {
     numColumns: board.numColumns,
     numRows: board.numRows,
     adjacentMines: board.adjacentMines,
+    createdAt: board.createdAt,
   );
 }
 
@@ -66,5 +71,6 @@ GameBoard _revealTile(GameBoard board, RevealTileAction action) {
     numColumns: board.numColumns,
     numRows: board.numRows,
     adjacentMines: board.adjacentMines,
+    createdAt: board.createdAt,
   );
 }
