@@ -8,6 +8,11 @@ class StatusBar extends StatelessWidget {
   final int flagsRemaining;
   final DateTime startTime;
   final GameStatus status;
+  final TextStyle statusTextStyle = const TextStyle(
+    fontSize: 20.0,
+  );
+
+  static const double HEIGHT = 60.0;
 
   const StatusBar({
     Key key,
@@ -18,24 +23,42 @@ class StatusBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Stream<Duration> counterStream = new Stream.periodic(new Duration(milliseconds: 200), (_) {
+    Stream<Duration> counterStream =
+        new Stream.periodic(new Duration(milliseconds: 200), (_) {
       return new DateTime.now().difference(startTime);
     });
     return SizedBox(
-      height: 60.0,
+      height: HEIGHT,
       child: new Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Text(flagsRemaining.toString()),
+          new Container(
+            padding: const EdgeInsets.only(left: 10.0),
+            alignment: Alignment.centerLeft,
+            child: new Text(
+              flagsRemaining.toString(),
+              style: statusTextStyle,
+            ),
+          ),
           new GameStatusIndicator(status: status),
-          new StreamBuilder<Duration>(
-            stream: counterStream,
-            builder: (context, snap) {
-              if (snap.hasData) {
-                return new Text(snap.data.toString().split(".").first);
-              }
-              return new Text("--");
-            },
+          new Container(
+            padding: const EdgeInsets.only(right: 10.0),
+            alignment: Alignment.centerRight,
+            child: new StreamBuilder<Duration>(
+              stream: counterStream,
+              builder: (context, snap) {
+                if (snap.hasData) {
+                  return new Text(
+                    snap.data.toString().split(".").first,
+                    style: statusTextStyle,
+                  );
+                }
+                return new Text(
+                  "--",
+                  style: statusTextStyle,
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -64,7 +87,10 @@ class GameStatusIndicator extends StatelessWidget {
     }
     return SizedBox(
       width: 5.0,
-      child: new Text(face),
+      child: new Text(
+        face,
+        style: new TextStyle(fontSize: 32.0),
+      ),
     );
   }
 }
