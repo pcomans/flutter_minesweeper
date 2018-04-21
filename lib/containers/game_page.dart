@@ -14,8 +14,14 @@ class ViewModel {
   final GameBoard board;
   final OnRevealTileCallback onRevealTile;
   final OnFlagTileCallback onFlagTile;
+  final OnNewGameCallback onNewGame;
 
-  ViewModel({this.board, this.onRevealTile, this.onFlagTile});
+  ViewModel({
+    this.board,
+    this.onRevealTile,
+    this.onFlagTile,
+    this.onNewGame,
+  });
 }
 
 MaterialPageRoute getGamePageRoute() {
@@ -35,6 +41,14 @@ class GamePage extends StatelessWidget {
           board: store.state,
           onRevealTile: (idx) => store.dispatch(new RevealTileAction(idx)),
           onFlagTile: (idx) => store.dispatch(new FlagTileAction(idx)),
+          onNewGame: () => store.dispatch(
+                new InitializeBoardAction(
+                  store.state.numRows,
+                  store.state.numColumns,
+                  store.state.numMines,
+                  new DateTime.now(),
+                ),
+              ),
         );
       },
       builder: (BuildContext context, ViewModel viewModel) {
@@ -53,6 +67,7 @@ class GamePage extends StatelessWidget {
                 startTime: board.createdAt,
                 status: board.gameStatus,
                 flagsRemaining: board.flagsRemaining,
+                onNewGame: () => viewModel.onNewGame(),
               ),
               new Expanded(
                 child: new GridView.count(
@@ -60,7 +75,6 @@ class GamePage extends StatelessWidget {
                   children: indices.map((index) {
                     bool hasMine = board.mines[index];
                     bool isFlagged = board.flagged[index];
-                    //Leave the board revealed for now
                     bool isRevealed = board.revealed[index];
                     int numAdjacentMines = board.adjacentMines[index];
 

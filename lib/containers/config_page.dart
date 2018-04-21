@@ -26,7 +26,7 @@ class _ConfigPageState extends State<ConfigPage> {
     return new StoreConnector<GameBoard, OnInitCallback>(
       converter: (Store<GameBoard> store) {
         return (numRows, numCols, numMines) {
-          store.dispatch(
+            store.dispatch(
             new InitializeBoardAction(
               numRows,
               numCols,

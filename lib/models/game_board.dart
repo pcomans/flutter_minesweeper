@@ -25,6 +25,8 @@ class GameBoard {
     return numMines - numFlags;
   }
 
+  int get numMines => mines.where((hasMine) => hasMine).length;
+
   int get minesRemaining {
     int idx = 0;
     return mines
