@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:minesweeper/util.dart';
 
 class GameBoard {
   final List<bool> mines;
@@ -27,15 +26,26 @@ class GameBoard {
   }
 
   int get minesRemaining {
-    return mapWithIndex(mines, (hasMine, idx) {
-      return hasMine && !flagged[idx];
-    }).where((hasUnflaggedMine) => hasUnflaggedMine).length;
+    int idx = 0;
+    return mines
+        .map((hasMine) {
+          idx++;
+          return hasMine && !flagged[idx - 1];
+        })
+        .where((hasUnflaggedMine) => hasUnflaggedMine)
+        .length;
   }
 
   int get minesRevealed {
-    return mapWithIndex(mines, (hasMine, idx) {
-      return hasMine && revealed[idx];
-    }).where((hasRevealedMine) => hasRevealedMine).length;
+    int idx = 0;
+
+    return mines
+        .map((hasMine) {
+          idx++;
+          return hasMine && revealed[idx - 1];
+        })
+        .where((hasRevealedMine) => hasRevealedMine)
+        .length;
   }
 
   GameStatus get gameStatus {
